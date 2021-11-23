@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import {
+  CordovaWebsocketOptions
+} from 'cordova-plugin-advanced-websocket-types';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+declare let CordovaWebsocketPlugin: any;
 
 @Component({
   selector: 'app-home',
@@ -7,6 +13,24 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  constructor() {
+
+const wsOptions: CordovaWebsocketOptions = {
+  url: 'wss://echo.websocket.org'
+};
+
+CordovaWebsocketPlugin.wsConnect(
+  wsOptions,
+  event => { // CordovaWebsocketEvent
+    console.log(`Received callback from WebSocket: ${event?.callbackMethod}`);
+  },
+  success => { // CordovaWebsocketSuccess
+    console.log(`Connected to WebSocket with id: ${success.webSocketId}`);
+  },
+  error => { // CordovaWebsocketError
+    console.log(`Failed to connect to WebSocket: code: ${error?.code}, reason: ${error?.reason}`, error?.exception);
+  }
+);
+  }
 
 }
